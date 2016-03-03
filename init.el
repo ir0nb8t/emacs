@@ -55,16 +55,17 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes (quote (zenburn)))
+ '(custom-enabled-themes (quote (solarized-dark)))
  '(custom-safe-themes
    (quote
-    ("a444b2e10bedc64e4c7f312a737271f9a2f2542c67caa13b04d525196562bf38" default))))
+    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+ '(package-selected-packages (quote (adoc-mode solarized-theme org-ac magit helm elpy))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#3F3F3F" :foreground "#DCDCCC" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "unknown" :family "Source Code Pro")))))
+ )
 
 ;;; splash screen
 (setq inhibit-splash-screen t
@@ -148,6 +149,7 @@
 
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
 (require 'org)
+(require 'ox-latex)
 (global-set-key (kbd "C-c c") 'org-capture)
 (define-key global-map "\C-cl" 'org-store-link)
 (define-key global-map "\C-ca" 'org-agenda)
@@ -155,6 +157,28 @@
 
 (setq org-agenda-files (list "~/org/org-tasks/home.org"
 			     "~/org/org-tasks/work.org"))
+
+
+;; set maximum indentation for description lists
+(setq org-list-description-max-indent 5)
+
+;; prevent demoting heading also shifting text inside sections
+(setq org-adapt-indentation nil)
+
+;; syntax highlight code blocks
+(setq org-src-fontify-natively t)
+
+;; Languages for Babel to support
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   (sh . t)
+   (python . t)
+   (R . t)
+   (ditaa . t)
+   (perl . t)
+   (gnuplot . t)
+   ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;;;Capture Templates;;;
@@ -191,4 +215,33 @@
          (file+datetree "~/org/org-tasks/work.org")
 	 "* TODO %?\n %i\n %a") ; template
 	))
+
+;; example LaTeX class
+(add-to-list 'org-latex-classes
+	     '("bjmarticle"
+	       "\\documentclass{article}
+\\usepackage[utf8]{inputenc}
+\\usepackage[T1]{fontenc}
+\\usepackage{graphicx}
+\\usepackage{longtable}
+\\usepackage{hyperref}
+\\usepackage{natbib}
+\\usepackage{amssymb}
+\\usepackage{amsmath}
+\\usepackage{geometry}
+\\geometry{a4paper,left=2.5cm,top=2cm,marginparsep=7pt,marginparwidth=.6in}"
+	       ("\\section{%s}" . "\\section*{%s}")
+	       ("\\subsection{%s}" . "\\subsection*{%s}")
+	       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+	       ("\\paragraph{%s}" . "\\paragraph*{%s}")
+	       ("\\subparagraph{%s}" . "\\subparagraph{%s}")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Asciidoc setting ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; set filetype of Asciidoc
+(add-to-list 'auto-mode-alist (cons "\\.adoc\\'" 'adoc-mode))
+;; load Asciidoc
+(require 'adoc-mode)
 
